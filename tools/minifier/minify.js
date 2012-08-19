@@ -3,7 +3,8 @@ var
 	path = require("path"),
 	walker = require("walker"),
 	jsp = require("uglify-js").parser,
-	pro = require("uglify-js").uglify
+	pro = require("uglify-js").uglify,
+  preprocessors = require("preprocessors")
 	;
 
 options = function(args) {
@@ -12,7 +13,7 @@ options = function(args) {
 		var arg = args[i];
 		if (arg[0] == "-") {
 			var o = arg.slice(1);
-			opts[o] = {enyo: 1, output: 1, alias: 1}[o] ? args[++i] : true;
+			opts[o] = {enyo: 1, output: 1, alias: 1, coffee: 1}[o] ? args[++i] : true;
 		} else {
 			opts.source = arg;
 		}
@@ -29,6 +30,7 @@ function printUsage() {
 	w("-alias ALIAS:", "Give paths a macroized alias");
 	w("-enyo ENYOPATH:", "Path to enyo loader (enyo/enyo.js)");
 	w("-output PATH/NAME:", "name of output file, prepend folder paths to change output directory");
+	w("-coffee MODULE:", "CoffeeScript compiler module to use");
 	w("-h, -?, -help:", "Show this message");
 }
 
@@ -74,6 +76,13 @@ concatCss = function(loader) {
 	for (var i=0, s; s=loader.sheets[i]; i++) {
 		w(s);
 		var code = fs.readFileSync(s, "utf8");
+
+    var ext = s.split(".").pop();
+    
+    if (ext === "less") {
+      code = preprocessors.less(code);
+    }    
+
 		// fix url paths
 		code = code.replace(/url\([^)]*\)/g, function(inMatch) {
 			// find the url path, ignore quotes in url string
@@ -124,6 +133,10 @@ compress = function(inCode) {
 
 compressJsFile = function(inPath) {
 	var code = fs.readFileSync(inPath, "utf8");
+	var ext = inPath.split(".").pop();
+	if (ext === "coffee") {
+    code = preprocessors.coffee(code, opt.coffee);
+  }
 	return compress(code);
 };
 
@@ -164,6 +177,7 @@ finish = function(loader) {
 w = console.log;
 
 opt = options(process.argv);
+w(opt);
 w("");
 
 if (opt.help || opt.h || opt["?"]) {

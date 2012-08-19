@@ -1,9 +1,18 @@
 // machine for a loader instance
 enyo.machine = {
 	sheet: function(s) {
-		document.write('<link href="' + s + '" media="screen" rel="stylesheet" type="text/css" />');
+	  var rel = { less: "stylesheet/less" }[s.split(".").pop()] || "stylesheet"; 
+		document.write('<link href="' + s + '" media="screen" rel="' + rel + '" type="text/css" />');
 	},
 	script: function(inSrc, onLoad, onError) {
+	  if (inSrc.split(".").pop() === "coffee") {
+	    if (window.CoffeeScript) {
+	      CoffeeScript.load(inSrc, onLoad || function() {});
+      } else {
+        throw new Error("Please include the CoffeeScript compiler in your debug.html to use CoffeeScript");
+      }
+      return;
+	  }
 		document.write('<scri' + 'pt src="' + inSrc + '"' + (onLoad ? ' onload="' + onLoad + '"' : '') + (onError ? ' onerror="' + onError + '"' : '') + '></scri' + 'pt>');
 	},
 	inject: function(inCode) {
