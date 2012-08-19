@@ -177,7 +177,6 @@ finish = function(loader) {
 w = console.log;
 
 opt = options(process.argv);
-w(opt);
 w("");
 
 if (opt.help || opt.h || opt["?"]) {
