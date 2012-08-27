@@ -1,14 +1,8 @@
 // machine for a loader instance
 enyo.machine = {
 	sheet: function(s) {
-<<<<<<< HEAD
-
-		var rel = s.split(".").pop(),
-		    ext == "less" ? "stylesheet/less" : "stylesheet";
-=======
 		var ext = s.split(".").pop(),
 		    rel = ext == "less" ? "stylesheet/less" : "stylesheet";
->>>>>>> 56ff062... Fix LESS support for enyo.load
 		if (!enyo.runtimeLoading) {
 			document.write('<link href="' + s + '" media="screen" rel="' + rel + '" type="text/css" />');
 		} else {
@@ -20,11 +14,7 @@ enyo.machine = {
 			document.getElementsByTagName('head')[0].appendChild(link);
 			if (ext === "less" && window.less && window.less.sheets) {
 			  less.sheets.push(link);
-<<<<<<< HEAD
         less.refresh(this);
-=======
-			  less.refresh(this);
->>>>>>> 56ff062... Fix LESS support for enyo.load
 			}
 		}
 	},
