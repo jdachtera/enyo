@@ -1,7 +1,9 @@
 // machine for a loader instance
 enyo.machine = {
 	sheet: function(s) {
-		var rel = s.split(".").pop() == "less" ? "stylesheet/less" : "stylesheet";
+
+		var rel = s.split(".").pop(),
+		    ext == "less" ? "stylesheet/less" : "stylesheet";
 		if (!enyo.runtimeLoading) {
 			document.write('<link href="' + s + '" media="screen" rel="' + rel + '" type="text/css" />');
 		} else {
@@ -11,6 +13,10 @@ enyo.machine = {
 			link.rel = rel;
 			link.type = "text/css";
 			document.getElementsByTagName('head')[0].appendChild(link);
+			if (ext === "less" && window.less && window.less.sheets) {
+			  less.sheets.push(link);
+        less.refresh(this);
+			}
 		}
 	},
 	script: function(inSrc, onLoad, onError) {
