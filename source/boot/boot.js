@@ -104,4 +104,3 @@ enyo.path.addPaths({
 	enyo: enyo.args.root,
 	lib: "$enyo/../lib"
 });
-
