@@ -80,7 +80,7 @@ concatCss = function(loader) {
     var ext = s.split(".").pop();
     
     if (ext === "less") {
-      code = preprocessors.less(code);
+      code = preprocessors.less(code, s);
     }    
 
 		// fix url paths
