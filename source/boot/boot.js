@@ -2,7 +2,7 @@
 enyo.machine = {
 	sheet: function(s) {
 		var ext = s.split(".").pop(),
-		    rel = ext == "less" ? "stylesheet/less" : "stylesheet";
+			rel = ext == "less" ? "stylesheet/less" : "stylesheet";
 		if (!enyo.runtimeLoading) {
 			document.write('<link href="' + s + '" media="screen" rel="' + rel + '" type="text/css" />');
 		} else {
@@ -13,21 +13,27 @@ enyo.machine = {
 			link.type = "text/css";
 			document.getElementsByTagName('head')[0].appendChild(link);
 			if (ext === "less" && window.less && window.less.sheets) {
-			  less.sheets.push(link);
-        less.refresh(this);
+				less.sheets.push(link);
+				less.refresh(this);
 			}
 		}
 	},
 	script: function(inSrc, onLoad, onError) {
 		if (inSrc.split(".").pop() === "coffee") {
-	    if (window.CoffeeScript) {
-	    	CoffeeScript.load(inSrc, onLoad || function() {});
+			if (window.CoffeeScript) {
+				new enyo.Ajax({url: inSrc}).response(this, function(inSender, inResponse) {
+					try {
+						CoffeeScript.eval(inResponse, {bare: true});
+					} catch(e) {
+						onError(e);
+					}
+				}).error(onError).go();
       } else {
-      	console.error("Please include the CoffeeScript compiler in your debug.html to use CoffeeScript");
-				onError();
+        console.error("Please include the CoffeeScript compiler in your debug.html to use CoffeeScript");
+		onError();
       }
-      	return;
-	  }
+      return;
+		}
 		if (!enyo.runtimeLoading) {
 			document.write('<scri' + 'pt src="' + inSrc + '"' + (onLoad ? ' onload="' + onLoad + '"' : '') + (onError ? ' onerror="' + onError + '"' : '') + '></scri' + 'pt>');
 		} else {
