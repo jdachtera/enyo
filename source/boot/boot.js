@@ -21,11 +21,16 @@ enyo.machine = {
 	script: function(inSrc, onLoad, onError) {
 		if (inSrc.split(".").pop() === "coffee") {
 			if (window.CoffeeScript) {
-				new enyo.Ajax({url: inSrc}).response(this, function(inSender, inResponse) {
+				new enyo.Ajax({url: inSrc, handleAs: "text"}).response(this, function(inSender, inResponse) {
 					try {
-						CoffeeScript.eval(inResponse, {bare: true});
-					} catch(e) {
-						onError(e);
+						CoffeeScript.eval(inResponse);
+						onLoad && onLoad(e);
+					} catch(error) {
+						console.error("Error compiling " + inSrc + ": " + error.message);
+						if (onError) 
+							onError(error);
+						else
+							throw error;
 					}
 				}).error(onError).go();
       } else {
