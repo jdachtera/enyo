@@ -152,7 +152,8 @@ var knownOpts = {
   "alias": Boolean,
   "enyo": String,
   "output": String,
-  "help": Boolean
+  "help": Boolean,
+  "coffee": String
 };
 
 var shortHands = {
@@ -161,7 +162,8 @@ var shortHands = {
   "output": ['--output'],
   "h": ['--help'],
   "?": ['--help'],
-  "help": ['--help']
+  "help": ['--help'],
+  "coffee": ['--coffee']
 };
 
 opt = nopt(knownOpts, shortHands, process.argv, 2);
