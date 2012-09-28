@@ -4,6 +4,7 @@ var
 	walker = require("walker"),
 	jsp = require("uglify-js").parser,
 	pro = require("uglify-js").uglify,
+	nopt = require("nopt"),
   preprocessors = require("preprocessors")
 	;
 
